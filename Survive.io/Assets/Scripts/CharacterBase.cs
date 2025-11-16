@@ -9,12 +9,16 @@ public abstract class CharacterBase : MonoBehaviour
 
     [Header("Weapon")]
     [SerializeField] private WeaponBase equippedWeapon;
-
+    [SerializeField] private Transform muzzle;
+    
+ 
     public UnityEvent OnHealthChanged = new UnityEvent();
     public UnityEvent OnDeath = new UnityEvent();
     public UnityEvent OnWeaponChanged = new UnityEvent();
     public UnityEvent OnAmmoChanged = new UnityEvent();
+    public UnityEvent<int, int> OnClipChanged = new UnityEvent<int, int>();
 
+    public Transform Muzzle => muzzle;
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
     public WeaponBase EquippedWeapon => equippedWeapon;
@@ -48,19 +52,18 @@ public abstract class CharacterBase : MonoBehaviour
         OnWeaponChanged.Invoke();
     }
 
-    public bool FireWeapon()
+    public virtual bool FireWeapon(Vector2 aimDirection)
     {
         if (equippedWeapon == null) return false;
         if (!HasAmmoFor(EquippedWeapon)) return false;
         if (!ConsumeAmmoFor(EquippedWeapon)) return false;
         
-        // auto reload if clip empty
         if (!equippedWeapon.CanFire) return ReloadWeapon();
-
-        return equippedWeapon.Fire(this);
+        
+        return equippedWeapon.Fire(this, aimDirection);
     }
 
-    public bool ReloadWeapon()
+    public virtual bool ReloadWeapon()
     {
         if (equippedWeapon == null) return false;
 

@@ -20,4 +20,14 @@ public class PlayerAim : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
         }
     }
+
+    public Vector2 GetAimDirection()
+{
+    Vector2 aimInput = new Vector2(aimJoystick.Horizontal, aimJoystick.Vertical);
+
+    if (aimInput.sqrMagnitude > 0.1f)
+        return aimInput.normalized;
+
+    return transform.right; 
+}
 }

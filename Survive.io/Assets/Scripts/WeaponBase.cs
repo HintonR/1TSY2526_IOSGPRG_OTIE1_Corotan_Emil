@@ -1,58 +1,52 @@
 using UnityEngine;
-public enum AmmoType
+
+public enum WeaponType
 {
     Pistol,
     Shotgun,
     Rifle
 }
+
 public class WeaponBase : MonoBehaviour
 {
-    [Header("Weapon Info")]
-    [SerializeField] private string weaponName = "Weapon";
-    [SerializeField] private AmmoType ammoType = AmmoType.Pistol;
+    [SerializeField] protected WeaponData data;
+    [SerializeField] protected GameObject bullet;
+    [SerializeField] protected Transform muzzle;
 
-    [Header("Firing")]
-    [SerializeField] private int ammoPerShot;
+    protected int currentClip;
 
-    [Header("Clip Settings")]
-    [SerializeField] private int maxClipSize;
-    [SerializeField] private int currentClip;
+    public WeaponType AmmoType => data.weaponType;
+    public Texture WeaponIcon => data.icon;
 
-    public string WeaponName => weaponName;
-    public AmmoType AmmoType => ammoType;
-    public int AmmoPerShot => ammoPerShot;
-
-    public int MaxClipSize => maxClipSize;
+    public int MaxClipSize => data.clipSize;
     public int CurrentClip => currentClip;
+    public bool CanFire => currentClip > 0;
 
-    public bool CanFire => currentClip >= ammoPerShot;
-
-
-    private void Start()
+    private void Awake()
     {
-        
-    } 
+        currentClip = MaxClipSize;
+    }
 
-    public virtual bool Fire(CharacterBase owner)
+    public virtual bool Fire(CharacterBase owner, Vector2 aimDirection)
     {
         if (!CanFire) return false;
 
-        currentClip -= ammoPerShot;
-        owner.OnAmmoChanged.Invoke();
+        currentClip--;
+        owner.OnClipChanged?.Invoke(currentClip, MaxClipSize);
         return true;
     }
 
-    public virtual int Reload(int amountFromReserve)
+    public virtual int Reload(int reserve)
     {
-        int needed = maxClipSize - currentClip;
-        int toLoad = Mathf.Min(needed, amountFromReserve);
+        int needed = MaxClipSize - currentClip;
+        int toLoad = Mathf.Min(needed, reserve);
 
         currentClip += toLoad;
-        return toLoad;
+        return toLoad; // Player reduces reserve by this much
     }
 
     public void ForceReloadFull()
     {
-        currentClip = maxClipSize;
+        currentClip = MaxClipSize;
     }
 }
