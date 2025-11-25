@@ -31,13 +31,12 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.062012, y: 3.4472144, z: 1}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7321826930634647356}
   - {fileID: 4195967468365153903}
   - {fileID: 2664316011027449292}
-  - {fileID: 1260565754203296210}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &305881183077347375
@@ -87,8 +86,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.6784314, g: 0.16470587, b: 0.22155331, a: 1}
+  m_Sprite: {fileID: -6467351601726320976, guid: 16791fc7e6c1cf846847cb31f4a05dad, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -133,7 +132,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.125
 --- !u!114 &2685226178261468724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +148,7 @@ MonoBehaviour:
   patrolSpeed: 3
   patrolChangeInterval: 2
   shootingInterval: 1
-  rotationSpeed: 0.8
+  rotationSpeed: 2
   currentState: 0
 --- !u!114 &3297743934136682157
 MonoBehaviour:
@@ -165,7 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   maxHealth: 50
   currentHealth: 0
-  equippedWeapon: {fileID: 483906065388665548}
+  equippedWeapon: {fileID: 0}
   muzzle: {fileID: 5927318233458115565}
   OnHealthChanged:
     m_PersistentCalls:
@@ -182,6 +181,7 @@ MonoBehaviour:
   OnClipChanged:
     m_PersistentCalls:
       m_Calls: []
+  reloadTime: 1.5
   weapons:
   - {fileID: 5469743974777593609, guid: d4623d38a2dd3044587a6539fba77449, type: 3}
   - {fileID: 1871070376013360494, guid: 9b1fed03f857c344cab7d9726445fa3c, type: 3}
@@ -213,53 +213,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!1 &3867210871325285622
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1260565754203296210}
-  - component: {fileID: 483906065388665548}
-  m_Layer: 0
-  m_Name: Pistol(Clone)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1260565754203296210
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3867210871325285622}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.55405, y: 0.17678, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 498636652453948993}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &483906065388665548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3867210871325285622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2edc2096583098a46998e16ca9f8c69c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pistol
-  data: {fileID: 11400000, guid: 7faa4c0ffdca2d14d8b304d778adf6ae, type: 2}
-  bullet: {fileID: 5218308931144328939, guid: e0c5a822c16968a45902f7a95d95c263, type: 3}
-  muzzle: {fileID: 0}
 --- !u!1 &3894769242586515975
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +238,7 @@ Transform:
   m_GameObject: {fileID: 3894769242586515975}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.482, y: 0, z: 0}
+  m_LocalPosition: {x: 0.055, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -359,7 +312,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 4.5
+  m_Radius: 1.25
 --- !u!114 &1872111413684690247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,7 +394,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 8
+  m_Radius: 3.25
 --- !u!114 &8242864768180485315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,8 +434,8 @@ Transform:
   m_GameObject: {fileID: 8153033844906845795}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.58, y: -0.29, z: -0.6666667}
-  m_LocalScale: {x: 1, y: 0.3416676, z: 1}
+  m_LocalPosition: {x: 0.116, y: -0.044, z: -0.6666667}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5927318233458115565}
@@ -535,8 +488,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
+  m_Sprite: {fileID: 1518363075290452430, guid: 4d922dcbf23666d45ac66f8c36bedf64, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

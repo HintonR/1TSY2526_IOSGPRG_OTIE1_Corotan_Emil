@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class UIController : MonoBehaviour
     [SerializeField] RawImage primaryWeapon;
     [SerializeField] RawImage secondaryWeapon;
 
+    [SerializeField] GameObject HUD;
+    [SerializeField] GameObject GameOver;
+
     public UnityEvent<int, int> OnClipChanged = new UnityEvent<int, int>();
    
     private void Awake()
@@ -27,8 +31,15 @@ public class UIController : MonoBehaviour
         _gM.player.OnWeaponChanged.AddListener(UpdateGunIcons);
         _gM.player.OnAmmoChanged.AddListener(UpdateAmmo);
         _gM.player.OnClipChanged.AddListener(UpdateClip);
+        _gM.player.OnDeath.AddListener(OnPlayerDeath);
         UpdateAmmo();
         UpdateClip(0,0);
+    }
+    
+    private void Start()
+    {
+        GameOver.SetActive(false);
+        HUD.SetActive(true);
     }
 
     private void Update()
@@ -45,7 +56,7 @@ public class UIController : MonoBehaviour
     }
 
 
-private void UpdateGunIcons()
+    private void UpdateGunIcons()
     {
         var player = _gM.player;
         if (player == null) return;
@@ -68,5 +79,16 @@ private void UpdateGunIcons()
     private void UpdateClip(int currentClip, int maxClip)
     {
         clip.text = $"{currentClip}/{maxClip}";
+    }
+
+    private void OnPlayerDeath()
+    {
+        GameOver.SetActive(true);
+        HUD.SetActive(false);
+    }
+
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 }

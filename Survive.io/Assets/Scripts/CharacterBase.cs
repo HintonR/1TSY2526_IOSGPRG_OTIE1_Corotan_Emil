@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 
 public abstract class CharacterBase : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public abstract class CharacterBase : MonoBehaviour
     public int MaxHealth => maxHealth;
     public WeaponBase EquippedWeapon => equippedWeapon;
     public bool IsDead => currentHealth <= 0;
+    public bool IsReloading => isReloading;
 
     protected virtual void Awake()
     {
@@ -55,28 +57,52 @@ public abstract class CharacterBase : MonoBehaviour
     public virtual bool FireWeapon(Vector2 aimDirection)
     {
         if (equippedWeapon == null) return false;
+
+        if (isReloading) return false;
+
+        if (!equippedWeapon.CanFire)
+            return ReloadWeapon();
+
         if (!HasAmmoFor(EquippedWeapon)) return false;
         if (!ConsumeAmmoFor(EquippedWeapon)) return false;
-        
-        if (!equippedWeapon.CanFire) return ReloadWeapon();
-        
+
         return equippedWeapon.Fire(this, aimDirection);
     }
 
     public virtual bool ReloadWeapon()
     {
         if (equippedWeapon == null) return false;
+        if (isReloading) return false;
+        if (equippedWeapon.CurrentClip >= equippedWeapon.MaxClipSize) return false;
 
         int reserveToUse = ProvideAmmoForReload(equippedWeapon);
         if (reserveToUse <= 0) return false;
 
-        int used = equippedWeapon.Reload(reserveToUse);
-        if (used > 0) OnAmmoChanged.Invoke();
-
-        return used > 0;
+        StartCoroutine(ReloadRoutine(reserveToUse));
+        return true;
     }
 
-    protected abstract bool HasAmmoFor(WeaponBase weapon);
+    [SerializeField] protected float reloadTime = 1.5f;
+    protected bool isReloading = false;
+
+    protected IEnumerator ReloadRoutine(int reserveUsed)
+    {
+        isReloading = true;
+
+        yield return new WaitForSeconds(reloadTime);
+
+        int used = equippedWeapon.Reload(reserveUsed);
+
+        if (used > 0)
+        {
+            OnClipChanged?.Invoke(equippedWeapon.CurrentClip, equippedWeapon.MaxClipSize);
+            OnAmmoChanged?.Invoke();
+        }
+
+        isReloading = false;
+    }
+
+    public abstract bool HasAmmoFor(WeaponBase weapon);
     protected abstract bool ConsumeAmmoFor(WeaponBase weapon);
     protected abstract int ProvideAmmoForReload(WeaponBase weapon);
 }
