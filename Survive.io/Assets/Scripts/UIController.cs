@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
 {
 
     GameManager _gM;
+    AudioManager _aM;
 
     [SerializeField] TextMeshProUGUI pistolAmmo;
     [SerializeField] TextMeshProUGUI rifleAmmo;
@@ -28,6 +29,7 @@ public class UIController : MonoBehaviour
     private void Awake()
     {
         _gM = GameManager.Instance;
+        _aM = AudioManager.Instance;
         _gM.player.OnWeaponChanged.AddListener(UpdateGunIcons);
         _gM.player.OnAmmoChanged.AddListener(UpdateAmmo);
         _gM.player.OnClipChanged.AddListener(UpdateClip);
@@ -89,6 +91,7 @@ public class UIController : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
+        _aM.StopGameOver();
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 }

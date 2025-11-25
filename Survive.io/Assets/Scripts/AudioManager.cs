@@ -57,7 +57,7 @@ public class AudioManager : Singleton<AudioManager>
             _gM.player.OnDeath.AddListener(OnPlayerDeath);
         }
 
-        if (scene.name != "MainMenu" && !bgmSource.isPlaying)
+        if (scene.name == "Gameplay" && !bgmSource.isPlaying)
             PlayBGM();
     }
 
@@ -89,19 +89,12 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    
-
-    private void Start()
-    {
-        PlayBGM();
-        _gM.player.OnDeath.AddListener(OnPlayerDeath);
-    }
-
-
-
     private void OnPlayerDeath()
     {
-        PlayGameOverSound();
+        bgmSource.Stop();
+
+        if (gameOverSFX != null)
+            sfxSource.PlayOneShot(gameOverSFX, gameoverVolume);
     }
 
     public void PlayBGM()
@@ -178,35 +171,13 @@ public class AudioManager : Singleton<AudioManager>
             sfxSource.PlayOneShot(clip, volume);
     }
 
-    public void PlayGameOverSound(float fadeDuration = 1.5f)
-    {
-        StartCoroutine(CrossfadeToGameOver(fadeDuration));
-    }
-
-    private IEnumerator CrossfadeToGameOver(float duration)
-    {
-        float startVolume = bgmSource.volume;
-        float time = 0f;
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            bgmSource.volume = Mathf.Lerp(startVolume, 0f, time / duration);
-            yield return null;
-        }
-
-        bgmSource.Stop();
-
-        if (gameOverSFX != null)
-            sfxSource.PlayOneShot(gameOverSFX, gameoverVolume);
-    }
     public void PlaySFX(AudioClip clip, float volume)
     {
         if (clip != null)
             sfxSource.PlayOneShot(clip, volume);
     }
 
-    public void StopBGM()
+    public void StopGameOver()
     {
         sfxSource.Stop();
     }
